@@ -12,7 +12,8 @@ import urllib
 __author__ = "beenje"
 __url__ = "http://github.com/beenje/plugin.video.arretsurimages"
 __settings__ = xbmcaddon.Addon(id='plugin.video.arretsurimages')
-__plugin__ = __settings__.getAddonInfo('name')
+# Force plugin name to avoid unicode problem
+__plugin__ = 'Arret Sur Images'
 __version__ = __settings__.getAddonInfo('version')
 
 print "[PLUGIN] '%s: version %s' initialized!" % (__plugin__, __version__)
