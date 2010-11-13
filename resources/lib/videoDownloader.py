@@ -3,16 +3,12 @@ import urllib
 import os.path
 import sys
 import xbmc
-import xbmcgui
 
-#enable localization
-import xbmcaddon
-
-__settings__ = xbmcaddon.Addon(id='plugin.video.arretsurimages')
+__addon__ = sys.modules['__main__'].__addon__
 pluginName = sys.modules['__main__'].__plugin__
 
 def getLS(i):
-    return __settings__.getLocalizedString(i).encode('utf-8')
+    return __addon__.getLocalizedString(i).encode('utf-8')
 
 class Download:
 
