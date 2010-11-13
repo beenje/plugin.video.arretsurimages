@@ -161,12 +161,12 @@ class Main:
         self.settings['downloadPath'] = __settings__.getSetting('downloadPath')
 
     def downloadVideo(self, url):
-        video = ASI.getVideoDownloadLink(url)
         if self.settings['downloadMode'] == 'true':
-            downloadPath = xbmcgui.Dialog().browse(3, getLS(30090), 'files')
+            downloadPath = xbmcgui.Dialog().browse(3, getLS(30090), 'video')
         else:
             downloadPath = self.settings['downloadPath']
         if downloadPath:
+            video = ASI.getVideoDownloadLink(url)
             Download(video['Title'], video['url'], downloadPath)
 
     def checkMode(self):
