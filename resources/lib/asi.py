@@ -122,7 +122,7 @@ class UI:
         """Display all parts of the selected program"""
         newMode = 'playVideo'
         # Add program parts to the list
-        for part in ASI.getProgramParts(self.main.args.url, self.main.args.name):
+        for part in ASI.getProgramParts(self.main.args.url, self.main.args.name, self.main.args.icon):
             part['mode'] = newMode
             self.addItem(part, 'video')
         # End the list
