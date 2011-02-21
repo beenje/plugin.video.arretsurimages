@@ -58,7 +58,7 @@ class ArretSurImages:
             print "bouton-telecharger.png not found"
         return {'Title':title, 'url':link}
 
-    def getVideoDetails(self, url):
+    def getIphoneVideoDetails(self, url):
         """Return the video title and link"""
         html = getHTML(url)
         soup = BeautifulSoup(html)
@@ -75,7 +75,7 @@ class ArretSurImages:
             link = 'None'
         return {'Title':title, 'url':link}
 
-    def getProgramParts(self, url, name):
+    def getIphoneProgramParts(self, url, name):
         """Return all parts of a program"""
         html = getHTML(url)
         soup = BeautifulSoup(html)
