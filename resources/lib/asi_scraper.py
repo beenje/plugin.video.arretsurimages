@@ -99,7 +99,7 @@ class ArretSurImages:
             parts.pop()
         return parts
 
-    def getVideoDetails(self, url):
+    def getVideoDetails(self, url, quality):
         """Return the video title and real link"""
         # Follow the swf link and get the video id from the answer
         # (this works due to the iPad user-agent)
@@ -110,7 +110,7 @@ class ArretSurImages:
             # Run the json request with the video id
             request = getHTML(JSONREQUEST % videoId)
             result = simplejson.loads(request)
-            link = result["stream_h264_hq_url"]
+            link = result[quality]
             title = result["title"]
         else:
             print "No video id found parsing swf link answer"

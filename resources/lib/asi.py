@@ -12,6 +12,7 @@ from videoDownloader import Download
 URLEMISSION = 'http://www.arretsurimages.net/toutes-les-emissions.php'
 URLALLEMISSION = 'http://www.arretsurimages.net/emissions.php'
 SORTMETHOD = ['date_publication', 'nb_vues', 'nb_comments']
+QUALITY = ['stream_h264_hq_url', 'stream_h264_url']
 
 ASI = asi_scraper.ArretSurImages()
 
@@ -69,7 +70,7 @@ class UI:
             # 'program' is a folder including video files
             # Program can be downloaded -> add option to contextmenu
             isFolder = True
-            contextmenu = [(getLS(30100), 'XBMC.RunPlugin(%s?download=%s)' % (sys.argv[0], urllib.quote_plus(info['url'])))]
+            contextmenu = [(getLS(30180), 'XBMC.RunPlugin(%s?download=%s)' % (sys.argv[0], urllib.quote_plus(info['url'])))]
             li.addContextMenuItems(contextmenu, replaceItems=True)
         else:
             # itemType == 'folder'
@@ -77,9 +78,9 @@ class UI:
         # Add item to list
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=u, listitem=li, isFolder=isFolder)
 
-    def playVideo(self):
+    def playVideo(self, quality):
         """Play the video"""
-        video = ASI.getVideoDetails(self.main.args.url)
+        video = ASI.getVideoDetails(self.main.args.url, quality)
         li=xbmcgui.ListItem(video['Title'],
                             iconImage = self.main.args.icon,
                             thumbnailImage = self.main.args.icon,
@@ -158,6 +159,7 @@ class Main:
         self.settings['sortMethod'] = int(__addon__.getSetting('sortMethod'))
         self.settings['downloadMode'] = __addon__.getSetting('downloadMode')
         self.settings['downloadPath'] = __addon__.getSetting('downloadPath')
+        self.quality = QUALITY[int(__addon__.getSetting('quality'))]
 
     def downloadVideo(self, url):
         if self.settings['downloadMode'] == 'true':
@@ -193,5 +195,5 @@ class Main:
         elif mode == 'parts':
             UI().programParts()
         elif mode == 'playVideo':
-            UI().playVideo()
+            UI().playVideo(self.quality)
 
