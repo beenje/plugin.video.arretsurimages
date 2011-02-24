@@ -161,7 +161,7 @@ class Main:
         self.parseArgs()
         self.getSettings()
         # Check username and password have been set
-        if self.settings['username'] and self.settings['password']:
+        if self.username and self.password:
             if checkMode:
                 self.checkMode()
         else:
@@ -177,20 +177,19 @@ class Main:
             self.args = updateArgs(mode = 'None', url = 'None', name = 'None')
 
     def getSettings(self):
-        self.settings = dict()
-        self.settings['username'] = __addon__.getSetting('username')
-        self.settings['password'] = __addon__.getSetting('password')
-        self.settings['sortMethod'] = int(__addon__.getSetting('sortMethod'))
-        self.settings['downloadMode'] = __addon__.getSetting('downloadMode')
-        self.settings['downloadPath'] = __addon__.getSetting('downloadPath')
+        self.username = __addon__.getSetting('username')
+        self.password = __addon__.getSetting('password')
+        self.sortMethod = SORTMETHOD[int(__addon__.getSetting('sortMethod'))]
+        self.downloadMode = __addon__.getSetting('downloadMode')
+        self.downloadPath = __addon__.getSetting('downloadPath')
         self.quality = QUALITY[int(__addon__.getSetting('quality'))]
         self.displayParts = (__addon__.getSetting('displayParts') == 'true')
 
     def downloadVideo(self, url):
-        if self.settings['downloadMode'] == 'true':
+        if self.downloadMode == 'true':
             downloadPath = xbmcgui.Dialog().browse(3, getLS(30090), 'video')
         else:
-            downloadPath = self.settings['downloadPath']
+            downloadPath = self.downloadPath
         if downloadPath:
             video = ASI.getVideoDownloadLink(url)
             Download(video['Title'], video['url'], downloadPath)
@@ -201,21 +200,21 @@ class Main:
             # Try to login only if username isn't already logged in
             # (we don't have to login everytime as we use a cookie)
             # We only need to check that when starting the plugin
-            if ASI.isLoggedIn(self.settings['username']) or ASI.login(self.settings['username'], self.settings['password']):
+            if ASI.isLoggedIn(self.username) or ASI.login(self.username, self.password):
                 UI().showCategories()
             else:
                 xbmcgui.Dialog().ok(getLS(30050), getLS(30053))
         elif mode == 'toutesLesEmissions':
-            url = URLALLEMISSION + '?orderby=' + SORTMETHOD[self.settings['sortMethod']]  
+            url = URLALLEMISSION + '?orderby=' + self.sortMethod
             UI().programs(url, self.displayParts)
         elif mode == 'arretSurImages':
-            url = URLEMISSION + '?id=1' + '&orderby=' + SORTMETHOD[self.settings['sortMethod']]  
+            url = URLEMISSION + '?id=1' + '&orderby=' + self.sortMethod
             UI().programs(url, self.displayParts)
         elif mode == 'ligneJaune':
-            url = URLEMISSION + '?id=2' + '&orderby=' + SORTMETHOD[self.settings['sortMethod']]
+            url = URLEMISSION + '?id=2' + '&orderby=' + self.sortMethod
             UI().programs(url, self.displayParts)
         elif mode == 'dansLeTexte':
-            url = URLEMISSION + '?id=3' + '&orderby=' + SORTMETHOD[self.settings['sortMethod']]
+            url = URLEMISSION + '?id=3' + '&orderby=' + self.sortMethod
             UI().programs(url, self.displayParts)
         elif mode == 'parts':
             if self.displayParts:
