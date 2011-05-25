@@ -1,3 +1,7 @@
+[B]Version 2.1.1[/B]
+
+- Update to xbmc.python 2.0 for eden repository
+
 [B]Version 1.1.1[/B]
 
 - If a stream is not available in the chosen quality, try another quality
