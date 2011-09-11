@@ -129,10 +129,7 @@ class ArretSurImages:
 
         video id allows to get video url with a json request"""
         html = getHTML(url)
-        # Filter to avoid wrap-porte (La chronique porte) defined at the beginning
-        # of the html page
-        blocContainers = SoupStrainer(attrs = {'class':'contenu-html bg-page-contenu'})
-        soup = BeautifulSoup(html, parseOnlyThese = blocContainers)
+        soup = BeautifulSoup(html)
         parts = []
         part = 1
         # Get all movie id
