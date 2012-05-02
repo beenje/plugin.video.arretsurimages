@@ -111,7 +111,7 @@ class ArretSurImages:
                 thumb = icon
             parts.append({'url':videoId, 'Title':title, 'Thumb':thumb})
             part += 1
-        if u'ux sources' in soup.title.string and part == 3:
+        if u'ux sources' in soup.title.string.lower() and part == 3:
             # '@ux sources' is not cut in parts but getting the title is not
             # easy as it's not in a field linked to the video
             # Use a hack: since 20111110, "version intégrale" is first
