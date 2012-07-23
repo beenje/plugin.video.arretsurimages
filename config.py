@@ -24,13 +24,13 @@ from xbmcswift import Plugin, xbmc, xbmcplugin
 PLUGIN_NAME = 'Arrêt Sur Images'
 PLUGIN_ID = 'plugin.video.arretsurimages'
 
+
 class Plugin_mod(Plugin):
     """Plugin class modified to pass updateListing to xbmcplugin.endOfDirectory"""
 
     def add_items(self, iterable, view_mode=None, update_listing=False):
-
-        items = [] # Keeps track of the list of tuples (url, list_item, is_folder) to pass to xbmcplugin.addDirectoryItems
-        urls = [] # Keeps track of the XBMC urls for all of the list items
+        items = []  # Keeps track of the list of tuples (url, list_item, is_folder) to pass to xbmcplugin.addDirectoryItems
+        urls = []  # Keeps track of the XBMC urls for all of the list items
         for i, li_info in enumerate(iterable):
             items.append(self._make_listitem(**li_info))
             if self._mode in ['crawl', 'interactive', 'test']:

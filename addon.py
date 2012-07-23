@@ -19,7 +19,7 @@
 # http://www.gnu.org/copyleft/gpl.html
 
 import sys
-from xbmcswift import xbmcgui, xbmc
+from xbmcswift import xbmcgui
 from collections import deque
 from SimpleDownloader import SimpleDownloader
 import resources.lib.scraper as scraper
@@ -45,6 +45,7 @@ def index():
         {'label': plugin.get_string(30012), 'url': plugin.url_for('settings')},
     ]
     return plugin.add_items(items)
+
 
 @plugin.route('/emissions/')
 def emissions():
@@ -84,6 +85,7 @@ def emissions():
     ]
     return plugin.add_items(items)
 
+
 @plugin.route('/bestof/<page>')
 def bestof(page):
     """Display ASI BestOf videos"""
@@ -110,10 +112,12 @@ def bestof(page):
                                                page=previous_page)})
     return plugin.add_items(items, update_listing=(page != 1))
 
+
 @plugin.route('/settings/')
 def settings():
     """Open the addon settings"""
     plugin.open_settings()
+
 
 @plugin.route('/labels/<label>/<page>/')
 def show_programs(label, page):
@@ -162,6 +166,7 @@ def show_programs(label, page):
                                                page=previous_page)})
     return plugin.add_items(items, update_listing=(page != 1))
 
+
 @plugin.route('/program/<url>', mode='play', name='play_program')
 @plugin.route('/download_program/<url>', mode='download', name='download_program')
 def get_program(url, mode):
@@ -179,10 +184,12 @@ def get_program(url, mode):
     elif mode == 'download':
         download_video(video['url'], video['title'])
 
+
 @plugin.route('/play/<url>')
 def play_video(url):
     """Play the video"""
     return plugin.set_resolved_url(url)
+
 
 @plugin.route('/download/<url>/<title>')
 def download_video(url, title):
@@ -196,6 +203,7 @@ def download_video(url, title):
     if download_path:
         params = {'url': url, 'download_path': download_path}
         downloader.download(title, params)
+
 
 @plugin.route('/parts/<url>/<name>/<icon>')
 def get_program_parts(url, name, icon):
@@ -230,6 +238,7 @@ def get_program_parts(url, name, icon):
                                                     video_id=part['video_id']))],
              } for part in parts]
     return plugin.add_items(main_item + items)
+
 
 @plugin.route('/play_video_id/<video_id>', mode='play', name='play_video_id')
 @plugin.route('/download_video_id/<video_id>', mode='download', name='download_video_id')
