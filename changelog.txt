@@ -1,3 +1,7 @@
+[B]Version 2.3.2[/B]
+
+- New branch for frodo
+
 [B]Version 2.2.2[/B]
 
 - Fixed UnicodeEncodeError
