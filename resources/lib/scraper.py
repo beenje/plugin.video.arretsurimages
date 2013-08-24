@@ -165,7 +165,7 @@ def get_main_video(url):
         img = soup.find('img', attrs={'src': 'http://www.arretsurimages.net/images/boutons/bouton-telecharger.png'})
         if img:
             download_page = img.findParent()['href']
-    if download_page.endswith('.avi'):
+    if download_page.endswith(('.avi', '.mp4')):
         title = download_page.split('/')[-1]
         soup = get_soup(download_page)
         click = soup.find(text=re.compile('cliquer ici'))
