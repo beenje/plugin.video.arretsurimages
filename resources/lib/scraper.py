@@ -129,7 +129,10 @@ class Programs:
         for media in soup.findAll('div', {'class': 'contenu-descr-8 '}):
             tag = media.findPrevious('a')
             # Get link, title and thumb
-            media_link = URLASI + tag['href']
+            if tag['href'].startswith('http'):
+                media_link = tag['href']
+            else:
+                media_link = URLASI + tag['href']
             media_title = tag['title'].encode('utf-8')
             media_thumb = URLASI + tag.find('img', attrs={'src': re.compile('.+?\.[png|jpg]')})['src']
             yield {'url': media_link, 'title': media_title, 'thumb': media_thumb}
