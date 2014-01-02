@@ -33,6 +33,7 @@ URL = {'toutesLesEmissions': 'http://www.arretsurimages.net/emissions.php?',
        'auxSources': URLEMISSION % 4,
        'auProchainEpisode': URLEMISSION % 5,
        '14h42': URLEMISSION % 6,
+       'CPQJ': URLEMISSION % 7,
       }
 SORTMETHOD = ['date_publication', 'nb_vues', 'nb_comments']
 BESTOF_SORTMETHOD = ['recent', 'visited', 'commented', 'rated']
@@ -98,6 +99,10 @@ def emissions():
         {'label': '14:42',
          'path': plugin.url_for('show_programs', label='14h42', page='1'),
          'info': {'Plot': plugin.get_string(30036)},
+        },
+        {'label': "C'est p@s qu'un jeu",
+         'path': plugin.url_for('show_programs', label='CPQJ', page='1'),
+         'info': {'Plot': plugin.get_string(30037)},
         },
         {'label': 'Ligne j@une',
          'path': plugin.url_for('show_programs', label='ligneJaune', page='1'),
