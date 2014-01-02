@@ -43,8 +43,8 @@ def login():
     """Login or exit if it fails"""
     # Only available with a subscription
     # Check if username and password have been set
-    username = plugin.get_setting('username')
-    password = plugin.get_setting('password')
+    username = plugin.get_setting('username', unicode)
+    password = plugin.get_setting('password', unicode)
     if not username or not password:
         xbmcgui.Dialog().ok(plugin.get_string(30050), plugin.get_string(30051), plugin.get_string(30052))
         sys.exit(0)
@@ -58,8 +58,8 @@ def login():
 @plugin.route('/')
 def index():
     """Default view"""
-    quick_access = plugin.get_setting('quickAccess')
-    if quick_access == 'true':
+    quick_access = plugin.get_setting('quickAccess', bool)
+    if quick_access:
         # Jump directly to 'toutesLesEmissions'
         login()
         return show_programs('toutesLesEmissions', '1')
@@ -111,7 +111,7 @@ def emissions():
 def bestof(page):
     """Display ASI BestOf videos"""
     # No subscription required
-    sort_method = BESTOF_SORTMETHOD[int(plugin.get_setting('bestOfSortMethod'))]
+    sort_method = BESTOF_SORTMETHOD[plugin.get_setting('bestOfSortMethod', int)]
     result = scraper.get_bestof_videos(page, sort_method)
     items = [{'label': video['title'],
               'path': plugin.url_for('play_video_id', video_id=video['id']),
@@ -142,10 +142,10 @@ def settings():
 @plugin.route('/labels/<label>/<page>/')
 def show_programs(label, page):
     """Display the list of programs"""
-    sortMethod = SORTMETHOD[int(plugin.get_setting('sortMethod'))]
+    sortMethod = SORTMETHOD[plugin.get_setting('sortMethod', int)]
     programs = scraper.Programs('%sp=%s&orderby=%s' % (URL[label], page, sortMethod))
     entries = programs.get_programs()
-    if plugin.get_setting('displayParts') == 'true':
+    if plugin.get_setting('displayParts', bool):
         # Displayed programs are not playable
         # We will display all the parts
         items = [{'label': program['title'],
@@ -213,11 +213,11 @@ def play_video(url):
 def download_video(url, title):
     """Download the video"""
     downloader = SimpleDownloader()
-    if plugin.get_setting('downloadMode') == 'true':
+    if plugin.get_setting('downloadMode', bool):
         # Ask for the path
         download_path = xbmcgui.Dialog().browse(3, plugin.get_string(30090), 'video')
     else:
-        download_path = plugin.get_setting('downloadPath')
+        download_path = plugin.get_setting('downloadPath', unicode)
     if download_path:
         params = {'url': url, 'download_path': download_path}
         downloader.download(title, params)
@@ -262,7 +262,7 @@ def get_video_by_id(video_id, mode):
     """Play or download the dailymotion video"""
     streams = deque(STREAMS)
     # Order the streams depending on the quality chosen
-    streams.rotate(int(plugin.get_setting('quality')) * -1)
+    streams.rotate(plugin.get_setting('quality', int) * -1)
     video = scraper.get_video_by_id(video_id, streams)
     if mode == 'play':
         return plugin.set_resolved_url(video['url'])
