@@ -19,7 +19,7 @@
 # http://www.gnu.org/copyleft/gpl.html
 
 import sys
-from xbmcswift import xbmcgui
+from xbmcswift2 import xbmcgui
 from collections import deque
 from SimpleDownloader import SimpleDownloader
 import resources.lib.scraper as scraper
@@ -64,11 +64,11 @@ def index():
         login()
         return show_programs('toutesLesEmissions', '1')
     items = [
-        {'label': plugin.get_string(30010), 'url': plugin.url_for('emissions')},
-        {'label': plugin.get_string(30011), 'url': plugin.url_for('bestof', page='1')},
-        {'label': plugin.get_string(30012), 'url': plugin.url_for('settings')},
+        {'label': plugin.get_string(30010), 'path': plugin.url_for('emissions')},
+        {'label': plugin.get_string(30011), 'path': plugin.url_for('bestof', page='1')},
+        {'label': plugin.get_string(30012), 'path': plugin.url_for('settings')},
     ]
-    return plugin.add_items(items)
+    return plugin.finish(items)
 
 
 @plugin.route('/emissions/')
@@ -77,34 +77,34 @@ def emissions():
     login()
     items = [
         {'label': 'Toutes les émissions',
-         'url': plugin.url_for('show_programs', label='toutesLesEmissions', page='1'),
-         'is_folder': True},
+         'path': plugin.url_for('show_programs', label='toutesLesEmissions', page='1'),
+        },
         {'label': '@rrêt sur images',
-         'url': plugin.url_for('show_programs', label='arretSurImages', page='1'),
+         'path': plugin.url_for('show_programs', label='arretSurImages', page='1'),
          'info': {'Plot':plugin.get_string(30031)},
-         'is_folder': True},
+        },
         {'label': 'D@ns le texte',
-         'url': plugin.url_for('show_programs', label='dansLeTexte', page='1'),
+         'path': plugin.url_for('show_programs', label='dansLeTexte', page='1'),
          'info': {'Plot': plugin.get_string(30033)},
-         'is_folder': True},
+        },
         {'label': '@ux sources',
-         'url': plugin.url_for('show_programs', label='auxSources', page='1'),
+         'path': plugin.url_for('show_programs', label='auxSources', page='1'),
          'info': {'Plot': plugin.get_string(30034)},
-         'is_folder': True},
+        },
         {'label': '@u Prochain Episode',
-         'url': plugin.url_for('show_programs', label='auProchainEpisode', page='1'),
+         'path': plugin.url_for('show_programs', label='auProchainEpisode', page='1'),
          'info': {'Plot': plugin.get_string(30035)},
-         'is_folder': True},
+        },
         {'label': '14:42',
-         'url': plugin.url_for('show_programs', label='14h42', page='1'),
+         'path': plugin.url_for('show_programs', label='14h42', page='1'),
          'info': {'Plot': plugin.get_string(30036)},
-         'is_folder': True},
+        },
         {'label': 'Ligne j@une',
-         'url': plugin.url_for('show_programs', label='ligneJaune', page='1'),
+         'path': plugin.url_for('show_programs', label='ligneJaune', page='1'),
          'info': {'Plot': plugin.get_string(30032)},
-         'is_folder': True}
+        }
     ]
-    return plugin.add_items(items)
+    return plugin.finish(items)
 
 
 @plugin.route('/bestof/<page>')
@@ -114,9 +114,8 @@ def bestof(page):
     sort_method = BESTOF_SORTMETHOD[int(plugin.get_setting('bestOfSortMethod'))]
     result = scraper.get_bestof_videos(page, sort_method)
     items = [{'label': video['title'],
-              'url': plugin.url_for('play_video_id', video_id=video['id']),
+              'path': plugin.url_for('play_video_id', video_id=video['id']),
               'thumbnail': video['thumbnail_url'],
-              'is_folder': False,
               'is_playable': True,
              } for video in result['list']]
     # Add navigation items (Previous / Next) if needed
@@ -124,14 +123,14 @@ def bestof(page):
     if result['has_more']:
         next_page = str(page + 1)
         items.insert(0, {'label': plugin.get_string(30020),
-                         'url': plugin.url_for('bestof',
+                         'path': plugin.url_for('bestof',
                                                page=next_page)})
     if page > 1:
         previous_page = str(page - 1)
         items.insert(0, {'label': plugin.get_string(30021),
-                         'url': plugin.url_for('bestof',
+                         'path': plugin.url_for('bestof',
                                                page=previous_page)})
-    return plugin.add_items(items, update_listing=(page != 1))
+    return plugin.finish(items, update_listing=(page != 1))
 
 
 @plugin.route('/settings/')
@@ -150,20 +149,18 @@ def show_programs(label, page):
         # Displayed programs are not playable
         # We will display all the parts
         items = [{'label': program['title'],
-                  'url': plugin.url_for('get_program_parts',
+                  'path': plugin.url_for('get_program_parts',
                                         url=program['url'],
                                         name=program['title'],
                                         icon=program['thumb']),
                   'thumbnail': program['thumb'],
-                  'is_folder': True,
                  } for program in entries]
     else:
         # Displayed programs are playable
         # We will try to play the main (xvid) video
         items = [{'label': program['title'],
-                  'url': plugin.url_for('play_program', url=program['url']),
+                  'path': plugin.url_for('play_program', url=program['url']),
                   'thumbnail': program['thumb'],
-                  'is_folder': False,
                   'is_playable': True,
                   'context_menu': [(plugin.get_string(30180),
                                     'XBMC.RunPlugin(%s)' %
@@ -176,20 +173,20 @@ def show_programs(label, page):
     if nav_items['next']:
         next_page = str(page + 1)
         items.insert(0, {'label': plugin.get_string(30020),
-                         'url': plugin.url_for('show_programs',
+                         'path': plugin.url_for('show_programs',
                                                label=label,
                                                page=next_page)})
     if nav_items['previous']:
         previous_page = str(page - 1)
         items.insert(0, {'label': plugin.get_string(30021),
-                         'url': plugin.url_for('show_programs',
+                         'path': plugin.url_for('show_programs',
                                                label=label,
                                                page=previous_page)})
-    return plugin.add_items(items, update_listing=(page != 1))
+    return plugin.finish(items, update_listing=(page != 1))
 
 
-@plugin.route('/program/<url>', mode='play', name='play_program')
-@plugin.route('/download_program/<url>', mode='download', name='download_program')
+@plugin.route('/program/<url>', name='play_program', options={'mode': 'play'})
+@plugin.route('/download_program/<url>', name='download_program', options={'mode': 'download'})
 def get_program(url, mode):
     """Play or download the selected program"""
     video = scraper.get_main_video(url)
@@ -234,9 +231,8 @@ def get_program_parts(url, name, icon):
     if 'url' in part:
         # Display the main video if available
         main_item = [{'label': part['title'],
-                  'url': plugin.url_for('play_video', url=part['url']),
+                  'path': plugin.url_for('play_video', url=part['url']),
                   'thumbnail': part['thumb'],
-                  'is_folder': False,
                   'is_playable': True,
                   'context_menu': [(plugin.get_string(30180),
                                     'XBMC.RunPlugin(%s)' %
@@ -249,20 +245,19 @@ def get_program_parts(url, name, icon):
         main_item = []
     # Display the remaining videos
     items = [{'label': part['title'],
-              'url': plugin.url_for('play_video_id', video_id=part['video_id']),
+              'path': plugin.url_for('play_video_id', video_id=part['video_id']),
               'thumbnail': part['thumb'],
-              'is_folder': False,
               'is_playable': True,
               'context_menu': [(plugin.get_string(30180),
                                 'XBMC.RunPlugin(%s)' %
                                     plugin.url_for('download_video_id',
                                                     video_id=part['video_id']))],
              } for part in parts]
-    return plugin.add_items(main_item + items)
+    return plugin.finish(main_item + items)
 
 
-@plugin.route('/play_video_id/<video_id>', mode='play', name='play_video_id')
-@plugin.route('/download_video_id/<video_id>', mode='download', name='download_video_id')
+@plugin.route('/play_video_id/<video_id>', name='play_video_id', options={'mode': 'play'})
+@plugin.route('/download_video_id/<video_id>', name='download_video_id', options={'mode': 'download'})
 def get_video_by_id(video_id, mode):
     """Play or download the dailymotion video"""
     streams = deque(STREAMS)
